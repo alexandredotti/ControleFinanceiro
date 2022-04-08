@@ -16,7 +16,7 @@ public class Movimentacao {
     @GeneratedValue
     private long id;
 
-    @OneToMany()
+    @ManyToOne()
     @JoinColumn(name="conta_id", referencedColumnName = "id")
     private Conta conta;
 
@@ -30,11 +30,15 @@ public class Movimentacao {
 
     private LocalDate dataPagamento;
 
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", referencedColumnName = "id")
+    private Categoria categoria;
+
     @NotNull
     private String descrição;
 
-
-
-
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private TipoMovimentacao tipoMovimentacao;
 
 }

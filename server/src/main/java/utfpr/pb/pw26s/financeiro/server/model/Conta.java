@@ -27,9 +27,7 @@ public class Conta {
     @NotNull
     private Integer banco;
 
-   // @ManyToOne
-   // @JoinColumn(name = "tipo_id", referencedColumnName = "id")
-    //private TipoConta tipo;
-
-
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private TipoConta tipoConta;
 }
