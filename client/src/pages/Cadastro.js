@@ -35,7 +35,7 @@ export class Cadastro extends React.Component {
             senha: this.state.senha
         }
         this.setState({ pendingApiCall: true });
-        this.props.actions.postSignup(usuario).then(response => {
+        this.props.actions.postUsuario(usuario).then(response => {
             this.setState({ pendingApiCall: false });
         })
             .catch(apiError => {
@@ -107,7 +107,7 @@ export class Cadastro extends React.Component {
 }
 Cadastro.defaultProps = {
     actions: {
-        postSignup: () =>
+        postUsuario: () =>
             new Promise((resolve, reject) => {
                 resolve({});
             })

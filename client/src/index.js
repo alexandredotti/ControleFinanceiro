@@ -7,7 +7,10 @@ import Cadastro from './pages/Cadastro';
 import * as apiCalls from './api/apiCalls';
 
 const actions = {
-  postSignup: apiCalls.postSignup,
+  postUsuario: apiCalls.postUsuario,
+  //postConta: apiCalls.postConta,
+  //postCategoria: apiCalls.postCategoria,
+  //postMovimentacao: apiCalls.postMovimentacao,
 }
 
 ReactDOM.render(
@@ -16,6 +19,7 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
