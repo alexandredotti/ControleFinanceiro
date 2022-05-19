@@ -1,15 +1,22 @@
 package utfpr.pb.pw26s.financeiro.server.model;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Data
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 public class Movimentacao {
 
     @Id
@@ -21,12 +28,13 @@ public class Movimentacao {
     private Conta conta;
 
     @NotNull
-    private BigDecimal valor;
+    @Column(nullable = false)
+    private Double valor;
 
     private LocalDate dataVenc;
 
     @NotNull
-    private BigDecimal valorPago;
+    private Double valorPago;
 
     private LocalDate dataPagamento;
 
@@ -35,6 +43,8 @@ public class Movimentacao {
     private Categoria categoria;
 
     @NotNull
+    @Size(min = 2, max = 1024)
+    @Column(length = 1024, nullable = false)
     private String descrição;
 
     @Enumerated(EnumType.STRING)

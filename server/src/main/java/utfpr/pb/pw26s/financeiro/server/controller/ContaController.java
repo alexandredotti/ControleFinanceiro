@@ -7,20 +7,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import utfpr.pb.pw26s.financeiro.server.model.Conta;
 import utfpr.pb.pw26s.financeiro.server.service.ContaService;
-import utfpr.pb.pw26s.financeiro.server.shared.GenericResponse;
+import utfpr.pb.pw26s.financeiro.server.service.CrudService;
 
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping("conta")
-public class ContaController {
+public class ContaController extends CrudController<Conta, Long>{
 
     @Autowired
-    ContaService contaService;
+    private ContaService contaService;
 
-    @PostMapping
-    GenericResponse novaConta(@Valid @RequestBody Conta conta){
-        contaService.save(conta);
-        return new GenericResponse("Registro salvo");
+    @Override
+    protected CrudService<Conta, Long> getService() {
+        return this.contaService;
     }
 }

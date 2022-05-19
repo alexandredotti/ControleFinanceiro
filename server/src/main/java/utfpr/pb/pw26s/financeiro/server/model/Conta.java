@@ -1,14 +1,21 @@
 package utfpr.pb.pw26s.financeiro.server.model;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
-@Data
 @Entity
-public class Conta {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = {"id"})
+public class Conta implements Serializable {
 
     @Id
     @GeneratedValue

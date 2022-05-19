@@ -28,17 +28,5 @@ public class UsuarioController {
         return new GenericResponse("Registro salvo");
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ApiError handlerValidationException(MethodArgumentNotValidException exception,
-                                        HttpServletRequest request) {
-        Map<String, String> validationErrors = new HashMap<>();
 
-        for(FieldError error: exception.getBindingResult().getFieldErrors()) {
-            validationErrors.put(error.getField(), error.getDefaultMessage());
-        }
-
-        return new ApiError(HttpStatus.BAD_REQUEST.value(), "validation error",
-                request.getServletPath(), validationErrors);
-    }
 }
