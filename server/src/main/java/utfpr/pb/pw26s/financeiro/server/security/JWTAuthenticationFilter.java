@@ -19,8 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 
-import static org.springframework.security.config.Elements.JWT;
-
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private AuthenticationManager authenticationManager;
@@ -35,16 +33,16 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            Usuario credentials = new ObjectMapper().readValue(
-                    request.getInputStream(), Usuario.class);
+            AuthenticationRequest credentials = new ObjectMapper().readValue(
+                    request.getInputStream(), AuthenticationRequest.class);
             Usuario usuario = (Usuario)
-                    authUsuarioService.loadUserByUsername(credentials.getNome());
+                    authUsuarioService.loadUserByUsername(credentials.getUsername());
 
 
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            credentials.getNome(),
-                            credentials.getSenha(),
+                            credentials.getUsername(),
+                            credentials.getPassword(),
                             usuario.getAuthorities()
                     )
             );

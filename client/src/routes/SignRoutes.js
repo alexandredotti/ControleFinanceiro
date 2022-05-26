@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import LoginPage from '../pages/LoginPage';
-import UserSignupPage from '../pages/UserSignupPage';
+import Cadastro from '../pages/Cadastro';
 
 const SignRoutes = () => {
 

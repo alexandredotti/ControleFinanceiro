@@ -26,10 +26,10 @@ public class Conta implements Serializable {
     private Usuario usuario;
 
     @NotNull
-    private Integer numero;
+    private String numero;
 
     @NotNull
-    private Integer agencia;
+    private String agencia;
 
     @NotNull
     private Integer banco;

@@ -31,7 +31,7 @@ const isAuthenticated = () => {
 };
 
 const AuthService = {
-  signup,
+  cadastro,
   login,
   logout,
   getCurrentUser,

@@ -38,7 +38,7 @@ export const Cadastro = (props) => {
             senha: form.senha
         }
         setPendingApiCall(true);
-        AuthService.signup(usuario).then(response => {
+        AuthService.cadastro(usuario).then(response => {
             setPendingApiCall(false);
             navigate('/');
         }).catch(apiError => {

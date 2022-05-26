@@ -29,6 +29,27 @@ const NavBar = (props) => {
               </NavLink>
             </li>
             <li className="nav-item">
+              <NavLink to="/categorias" className={(navData) =>
+                  navData.isActive ? "nav-link active" : "nav-link"
+                }>
+                Categorias
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink to="/conta" className={(navData) =>
+                  navData.isActive ? "nav-link active" : "nav-link"
+                }>
+                Conta
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink to="/movimentacao" className={(navData) =>
+                  navData.isActive ? "nav-link active" : "nav-link"
+                }>
+                Movimentações
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <button className="btn btn-light" onClick={onClickLogout}>
                 &times; Sair
               </button>

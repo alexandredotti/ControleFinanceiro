@@ -3,6 +3,11 @@ import { Route, Routes } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import HomePage from '../pages/HomePage';
 
+import CategoriaListPage from '../pages/CategoriaListPage';
+import ContaListPage from '../pages/ContaListPage';
+import CategoriaFormPage from '../pages/CategoriaFormPage';
+import ContaFormPage from '../pages/ContaFormPage.js';
+
 const AuthenticatedRoutes = () => {
     
     return (
@@ -10,6 +15,15 @@ const AuthenticatedRoutes = () => {
             <NavBar />
             <Routes>
                 <Route path='/' element={<HomePage />} />
+
+                <Route path='/categorias' element={<CategoriaListPage />} />
+                <Route path='/categorias/novo' element={<CategoriaFormPage />} />
+                <Route path='/categorias/:id' element={<CategoriaFormPage />} />
+
+                <Route path='/conta' element={<ContaListPage />} />
+                <Route path='/conta/novo' element={<ContaFormPage />} />
+                <Route path='/conta/:id' element={<ContaFormPage />} />
+
                 <Route path='*' element={<HomePage />} />
             </Routes>
         </div>

@@ -5,21 +5,21 @@ import Input from '../components/input';
 import AuthService from '../services/auth.service';
 
 export const LoginPage = (props) => {
-  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [apiError, setApiError] = useState();
   const [pendingApiCall, setPendingApiCall] = useState(false);
 
   useEffect(() =>{
     setApiError();
-  }, [nome, senha]);
+  }, [email, senha]);
 
   const onClickLogin = () => {
     setPendingApiCall(true);
 
     const body = {
-        nome,
-        senha
+        username:email,
+        password:senha
     };
     AuthService.login(body).then((response) => {
       setPendingApiCall(false);
@@ -33,7 +33,7 @@ export const LoginPage = (props) => {
 
 
   let disableSubmit = false;
-  if (nome === '') {
+  if (email === '') {
     disableSubmit = true;
   }
   if (senha === '') {
@@ -45,12 +45,12 @@ export const LoginPage = (props) => {
       <h1 className="text-center">Login</h1>
       <div className="col-12 mb-3">
         <Input
-          label="Informe o seu nome"
+          label="Informe o seu email"
           className="form-control"
           type="text"
-          placeholder="Your username"
-          value={nome}
-          onChange={(event) => setNome(event.target.value)}
+          placeholder="Your email"
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
         />
       </div>
       <div className="col-12 mb-3">

@@ -15,7 +15,7 @@ public class UniqueNomeValidator implements ConstraintValidator<UniqueNome, Stri
     @Override
     public boolean isValid(String nome,
                            ConstraintValidatorContext constraintValidatorContext) {
-        if (usuarioRepository.findByUsername(nome) == null) {
+        if (usuarioRepository.findByEmail(nome) == null) {
             return true;
         }
         return false;
