@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -17,13 +18,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"id"})
-public class Movimentacao {
+public class Movimentacao implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name="conta_id", referencedColumnName = "id")
     private Conta conta;
 
@@ -31,11 +32,13 @@ public class Movimentacao {
     @Column(nullable = false)
     private Double valor;
 
+    @Column(nullable = false)
     private LocalDate dataVenc;
 
     @NotNull
     private Double valorPago;
 
+    @Column(nullable = false)
     private LocalDate dataPagamento;
 
     @ManyToOne

@@ -120,6 +120,7 @@ export const ContaFormPage = () => {
                     name="tipoConta"
                     value={form.tipoConta}
                     onChange={onChange}>
+                        <option value="">[Selecione]</option> 
                         <option value="CC">CC</option>
                         <option value="CP">CP</option>
                         <option value="CARTAO">CARTAO</option>
