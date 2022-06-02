@@ -13,7 +13,7 @@ import utfpr.pb.pw26s.financeiro.server.shared.GenericResponse;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("movimentacoes")
+@RequestMapping("movimentacao")
 public class MovimentacaoController extends CrudController<Movimentacao, Long> {
 
     @Autowired

@@ -48,7 +48,7 @@ public class Movimentacao implements Serializable {
     @NotNull
     @Size(min = 2, max = 1024)
     @Column(length = 1024, nullable = false)
-    private String descrição;
+    private String descricao;
 
     @Enumerated(EnumType.STRING)
     @NotNull
