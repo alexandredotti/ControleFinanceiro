@@ -16,11 +16,16 @@ const remove = (id) => {
     return axios.delete(`/movimentacao/${id}`, {headers: getAuthHeader()});
 }
 
+const findDTO = () => {
+    return axios.get('/movimentacao/dash', {headers: getAuthHeader()});
+}
+
 const MovimentacaoService = {
     save,
     findAll,
     findOne,
-    remove
+    remove,
+    findDTO
 }
 
 const getAuthHeader = () => {

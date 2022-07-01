@@ -5,6 +5,11 @@ import CategoriaService from '../services/CategoriaService';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Controller, useForm } from "react-hook-form";
 import DatePicker from "react-datepicker";
+import { registerLocale, setDefaultLocale } from "react-datepicker";
+import ptBR from 'date-fns/locale/pt-BR';
+
+import "react-datepicker/dist/react-datepicker.css";
+
 import {
     FormErrorMessage,
     FormLabel,
@@ -39,6 +44,7 @@ export const MovimentacaoFormPage = () => {
         descricao: "",
         tipoMovimentacao: null
     });
+    registerLocale('ptBR', ptBR)
 
     useEffect(() => {
         CategoriaService.findAll().then((response) => {
@@ -52,13 +58,14 @@ export const MovimentacaoFormPage = () => {
                 MovimentacaoService.findOne(id).then((response) => {
                     if (response.data) {
                         console.log(response.data);
+                        // console.log(new Date(response.data.dataVenc).getTime() + 3 * 60 * 1000);
                         setEntity({
                             id: response.data.id,
                             conta: response.data.conta.id,
                             valor: response.data.valor,
-                            dataVenc: response.data.dataVenc,
+                            dataVenc: new Date(response.data.dataVenc),
                             valorPago: response.data.valorPago,
-                            dataPagamento: response.data.dataPagamento,
+                            dataPagamento: new Date(response.data.dataPagamento),
                             categoria: response.data.categoria.id,
                             descricao: response.data.descricao,
                             tipoMovimentacao: response.data.tipoMovimentacao
@@ -119,7 +126,7 @@ export const MovimentacaoFormPage = () => {
                     >
                         {conta.map((conta) => (
                             <option key={conta.id} value={conta.id}>
-                                {conta.nome}
+                                {conta.banco + ' - '+ conta.numero} 
                             </option>
                         ))}
                     </Select>
@@ -144,11 +151,15 @@ export const MovimentacaoFormPage = () => {
                     </FormErrorMessage>
                 </FormControl>
                 <FormControl isInvalid={errors.dataVenc}>
+                    <FormLabel htmlFor="dataVenc">Data de Vencimento</FormLabel>
                     <Controller
                         control={control}
                         name='dataVenc'
                         render={({ field }) => (
                             <DatePicker
+                                dateFormat="dd/MM/yyyy"
+                                locale="ptBR"
+                                className='form-control'
                                 placeholderText='Selecione a Data de Vencimento.'
                                 onChange={(date) => field.onChange(date)}
                                 selected={field.value}
@@ -173,11 +184,15 @@ export const MovimentacaoFormPage = () => {
                     </FormErrorMessage>
                 </FormControl>
                 <FormControl isInvalid={errors.dataPagamento}>
+                    <FormLabel htmlFor="dataPagamento">Data de Pagamento</FormLabel>
                     <Controller
                         control={control}
                         name='dataPagamento'
                         render={({ field }) => (
                             <DatePicker
+                                dateFormat="dd/MM/yyyy"
+                                locale="ptBR"
+                                className='form-control'
                                 placeholderText='Selecione a Data de Pagamento.'
                                 onChange={(date) => field.onChange(date)}
                                 selected={field.value}
@@ -227,7 +242,8 @@ export const MovimentacaoFormPage = () => {
                     </FormErrorMessage>
                 </FormControl>
                 <FormControl isInvalid={errors.tipoMovimentacao}>
-                    <Select placeholder='Selecione o tipo de Movimentação'
+                    <FormLabel htmlFor="tipoMovimentacao">Tipo de Movimentação</FormLabel>
+                    <Select placeholder='Selecione o tipo de Movimentação.'
                         {...register("tipoMovimentacao", {
                             required: "O campo tipo de movimentação é obrigatório",
                         })}
@@ -235,7 +251,6 @@ export const MovimentacaoFormPage = () => {
                         {/* <option value="">[Selecione]</option> */}
                         <option value='RECEITA'>RECEITA</option>
                         <option value='DESPESA'>DESPESA</option>
-                        <option value='TRANSF_CONTAS'>TRANSF_CONTAS</option>
                     </Select>
                 </FormControl>
                 <div className="text-center">

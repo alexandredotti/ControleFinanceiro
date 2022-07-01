@@ -1,10 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ContaService from '../services/ContaService';
+import {
+    Table,
+    Thead,
+    Tbody,
+    Tfoot,
+    Tr,
+    Th,
+    Td,
+    TableCaption,
+    TableContainer,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    IconButton,
+} from "@chakra-ui/react";
+import {
+    BsThreeDotsVertical,
+    BsPencilSquare,
+    BsTrash,
+    BsPlusCircle,
+} from "react-icons/bs";
 
 export const ContaListPage = () => {
     const [data, setData] = useState([]);
     const [apiError, setApiError] = useState();
+    const navigate = useNavigate();
 
     useEffect(() => {
         loadData();
@@ -21,6 +44,10 @@ export const ContaListPage = () => {
             });
     };
 
+    const onEdit = (url) => {
+        navigate(url);
+    };
+
     const onRemove = (id) => {
         ContaService.remove(id).then((response) => {
             loadData();
@@ -32,45 +59,80 @@ export const ContaListPage = () => {
 
     return (
         <div className="container">
-            <h1 className="text-center">Lista de Contas</h1>
+            <h1 className="fs-2 mb-4 text-center">Lista de Contas</h1>
             <div className="text-center">
-                <Link className="btn btn-success" to="/conta/novo">Nova Conta</Link>
+                <Link className="btn btn-success btn-icon col-md-2 mb-2" to="/conta/novo" title="Nova Conta">
+                    <BsPlusCircle /> <span style={{ marginLeft: 10 }}>Nova Conta</span>
+                </Link>
             </div>
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Número</th>
-                        <th>Agência</th>
-                        <th>Banco</th>
-                        <th>Tipo da Conta</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((conta) => (
-                        <tr>
-                            <td>{conta.id}</td>
-                            <td>{conta.numero}</td>
-                            <td>{conta.agencia}</td>
-                            <td>{conta.banco}</td>
-                            <td>{conta.tipoConta}</td>
-                            <td>
-                                <Link className="btn btn-primary"
-                                    to={`/conta/${conta.id}`}>Editar</Link>
+            <TableContainer>
+                <Table>
+                    <TableCaption>Lista de Contas</TableCaption>
+                    <Thead>
+                        <Tr>
+                            <Th>Código</Th>
+                            <Th>Número</Th>
+                            <Th>Agência</Th>
+                            <Th isNumeric>Banco</Th>
+                            <Th>Tipo da Conta</Th>
+                            <Th>Ações</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {data.map((conta) => (
+                            <Tr
+                                key={conta.id}
+                                _hover={{ cursor: "pointer", background: "#eee" }}
+                            >
+                                <Td>{conta.id}</Td>
+                                <Td>{conta.numero}</Td>
+                                <Td>{conta.agencia}</Td>
+                                <Td isNumeric>{conta.banco}</Td>
+                                <Td>{conta.tipoConta}</Td>
+                                <Td>
+                                    <Menu>
+                                        <MenuButton
+                                            as={IconButton}
+                                            aria-label="Actions"
+                                            icon={<BsThreeDotsVertical size={20} />}
+                                            variant="ghost"
+                                            width="10"
+                                        />
+                                        <MenuList>
+                                            <MenuItem
+                                                icon={<BsPencilSquare />}
+                                                onClick={() => onEdit(`/conta/${conta.id}`)}
+                                            >
+                                                Editar
+                                            </MenuItem>
+                                            <MenuItem
+                                                icon={<BsTrash />}
+                                                onClick={() => onRemove(conta.id)}
+                                            >
+                                                Remover
+                                            </MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                                </Td>
+                            </Tr>
 
-                                <button className="btn btn-danger"
-                                    onClick={() => onRemove(conta.id)}>
-                                    Remover
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                        ))}
+                    </Tbody>
+                    <Tfoot>
+                        <Tr>
+                            <Th>Código</Th>
+                            <Th>Número</Th>
+                            <Th>Agência</Th>
+                            <Th isNumeric>Banco</Th>
+                            <Th>Tipo da Conta</Th>
+                            <Th>Ações</Th>
+                        </Tr>
+                    </Tfoot>
+                </Table>
+            </TableContainer>
             {apiError && (<div className="alert alert-danger">{apiError}</div>)}
         </div>
     );
-}
+};
 
 export default ContaListPage;

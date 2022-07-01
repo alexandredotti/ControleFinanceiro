@@ -1,34 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import ButtonWithProgress from '../components/ButtonWithProgress';
-import Input from '../components/input';
+import { useForm } from "react-hook-form";
 import ContaService from '../services/ContaService';
+import {
+    FormErrorMessage,
+    FormLabel,
+    FormControl,
+    Input,
+    Textarea,
+    Select,
+    Button
+} from "@chakra-ui/react";
 
 export const ContaFormPage = () => {
-    const [form, setForm] = useState({
-        id: null,
-        numero: '',
-        agencia: '',
-        banco: null,
-        tipoConta: null
-    });
-    const [errors, setErrors] = useState({});
-    const [pendingApiCall, setPendingApiCall] = useState(false);
+    const {
+        handleSubmit,
+        register,
+        formState: { errors, isSubmitting },
+        reset,
+    } = useForm();
     const [apiError, setApiError] = useState();
-
     const navigate = useNavigate();
     const { id } = useParams();
+    const [entity, setEntity] = useState({
+        id: null,
+        numero: "",
+        agencia: "",
+        banco: null,
+        tipoConta: undefined,
+    });
 
     useEffect(() => {
         if (id) {
-            ContaService.findOne(id).then( (response) => {
+            ContaService.findOne(id).then((response) => {
                 if (response.data) {
-                    setForm({
+                    console.log(response.data);
+                    setEntity({
                         id: response.data.id,
                         numero: response.data.numero,
                         agencia: response.data.agencia,
                         banco: response.data.banco,
-                        tipoConta: response.data.tipoConta}); // ...response.data
+                        tipoConta: response.data.tipoConta
+                    }); // ...response.data
                     setApiError();
                 } else {
                     setApiError('Falha ao carregar a conta');
@@ -36,107 +49,105 @@ export const ContaFormPage = () => {
             }).catch((erro) => {
                 setApiError('Falha ao carregar a conta');
             });
+        } else {
+            setEntity((previousEntity) => {
+                return {
+                    ...previousEntity,
+                };
+            });
         }
+        setApiError();
     }, [id]);
 
-    const onChange = (event) => {
-        const { value, name } = event.target;
-        setForm((previousForm) => {
-            return {
-                ...previousForm,
-                [name]: value,
-            };
-        });
-        setErrors((previousErrors) => {
-            return {
-                ...previousErrors,
-                [name]: undefined,
-            };
-        });
-    };
+    useEffect(() => {
+        reset(entity);
+    }, [entity, reset]);
 
-    const onSubmit = () => {
+    const onSubmit = (data) => {
         const conta = {
-            id: form.id,
-            numero: form.numero,
-            agencia: form.agencia,
-            banco: form.banco,
-            tipoConta: form.tipoConta//{ id: form.tipoConta }
+            ...data,
+            id: entity.id,
         };
-        setPendingApiCall(true);
         ContaService.save(conta).then((response) => {
-            setPendingApiCall(false);
             navigate('/conta');
         }).catch((error) => {
-            if (error.response.data && error.response.data.validationErrors) {
-                setErrors(error.response.data.validationErrors);
-            } else {
-                setApiError('Falha ao salvar a conta.');
-            }
-            setPendingApiCall(false);
+            setApiError('Falha ao salvar a conta.');
         });
     };
 
     return (
         <div className="container">
-            <h1 className="text-center">Cadastro de Conta</h1>
-            <div className="col-12 mb-3">
-                <Input
-                    name="numero"
-                    label="Número"
-                    placeholder="Informe o número da conta"
-                    value={form.numero}
-                    onChange={onChange}
-                    hasError={errors.numero && true}
-                    error={errors.numero}
-                />
-            </div>
-            <div className="col-12 mb-3">
-                <Input
-                    name="agencia"
-                    label="Agência"
-                    placeholder="Informe a agência"
-                    value={form.agencia}
-                    onChange={onChange}
-                    hasError={errors.agencia && true}
-                    error={errors.agencia}
-                />
-            </div>
-            <div className="col-12 mb-3">
-                <Input
-                    name="banco"
-                    label="Banco"
-                    placeholder="Informe o banco"
-                    value={form.banco}
-                    onChange={onChange}
-                    hasError={errors.banco && true}
-                    error={errors.banco}
-                />
-            </div>
-            <div className="col-12 mb-3">
-                <label>Tipo da Conta</label>
-                <select
-                    className="form-control"
-                    name="tipoConta"
-                    value={form.tipoConta}
-                    onChange={onChange}>
-                        <option value="">[Selecione]</option> 
-                        <option value="CC">CC</option>
-                        <option value="CP">CP</option>
-                        <option value="CARTAO">CARTAO</option>
-                </select>
-                {errors.tipoConta && (
-                    <div className="invalid-feedback d-block">{errors.tipoConta}</div>
-                )}
-            </div>
-            <div className="text-center">
-                <ButtonWithProgress
-                    onClick={onSubmit}
-                    disabled={pendingApiCall ? true : false}
-                    pendingApiCall={pendingApiCall}
-                    text="Salvar"
-                />
-            </div>
+            <h1 className="fs-2 text-center">Cadastro de Conta</h1>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <FormControl isInvalid={errors.numero}>
+                    <FormLabel htmlFor="numero">Número</FormLabel>
+                    <Input
+                        id="numero"
+                        placeholder="Número da conta"
+                        {...register("numero", {
+                            required: "O campo número é obrigatório",
+                        })}
+                    />
+                    <FormErrorMessage>
+                        {errors.numero && errors.numero.message}
+                    </FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={errors.agencia}>
+                    <FormLabel htmlFor="agencia">Agência</FormLabel>
+                    <Input
+                        id="agencia"
+                        placeholder="Informe a agência"
+                        {...register("agencia", {
+                            required: "O campo agência é obrigatório",
+                        })}
+                    />
+                    <FormErrorMessage>
+                        {errors.agencia && errors.agencia.message}
+                    </FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={errors.banco}>
+                    <FormLabel htmlFor="banco">Banco</FormLabel>
+                    <Input
+                        id="banco"
+                        placeholder="0"
+                        {...register("banco", {
+                            required: "O campo banco é obrigatório",
+                            min: { value: 1, message: "O banco deve ser maior que zero" },
+                        })}
+                        type="number"
+                        step="any"
+                    />
+                    <FormErrorMessage>
+                        {errors.banco && errors.banco.message}
+                    </FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={errors.tipoConta}>
+                    <FormLabel htmlFor="tipoConta">Tipo Conta</FormLabel>
+                    <Select placeholder='Selecione o tipo de Conta'
+                        {...register("tipoConta", {
+                            required: "O campo tipo de conta é obrigatório",
+                        })}
+                        size="sm">
+                        {/* <option value="">[Selecione]</option> */}
+                        <option value='CC'>CC</option>
+                        <option value='CP'>CP</option>
+                        <option value='CARTAO'>CARTAO</option>
+                    </Select>
+                    <FormErrorMessage>
+                        {errors.tipoConta && errors.tipoConta.message}
+                    </FormErrorMessage>
+                </FormControl>
+                <div className="text-center">
+                    <Button
+                        mt={4}
+                        colorScheme="teal"
+                        isLoading={isSubmitting}
+                        type="submit"
+                    >
+                        Salvar
+                    </Button>
+                </div>
+            </form>
             {apiError && (<div className="alert alert-danger">{apiError}</div>)}
             <div className="text-center">
                 <Link to="/conta">Voltar</Link>

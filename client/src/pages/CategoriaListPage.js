@@ -1,10 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import CategoriaService from '../services/CategoriaService';
+import {
+    Table,
+    Thead,
+    Tbody,
+    Tfoot,
+    Tr,
+    Th,
+    Td,
+    TableCaption,
+    TableContainer,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    IconButton,
+} from "@chakra-ui/react";
+import {
+    BsThreeDotsVertical,
+    BsPencilSquare,
+    BsTrash,
+    BsPlusCircle,
+} from "react-icons/bs";
 
 export const CategoriaListPage = () => {
     const [data, setData] = useState([]);
     const [apiError, setApiError] = useState();
+    const navigate = useNavigate();
 
     useEffect(() => {
         loadData();
@@ -21,6 +44,10 @@ export const CategoriaListPage = () => {
             });
     };
 
+    const onEdit = (url) => {
+        navigate(url);
+    };
+
     const onRemove = (id) => {
         CategoriaService.remove(id).then((response) => {
             loadData();
@@ -32,39 +59,68 @@ export const CategoriaListPage = () => {
 
     return (
         <div className="container">
-            <h1 className="text-center">Lista de Categorias</h1>
+            <h1 className="fs-2 mb-4 text-center">Lista de Categorias</h1>
             <div className="text-center">
-                <Link className="btn btn-success" to="/categorias/novo">Nova Categoria</Link>
+                <Link className="btn btn-success btn-icon col-md-2 mb-2" to="/categorias/novo" title="Nova Categoria">
+                    <BsPlusCircle /> <span style={{ marginLeft: 10 }}>Nova Categoria</span>
+                </Link>
             </div>
-            <table className="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Nome</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((categoria) => (
-                        <tr key={categoria.id}>
-                            <td>{categoria.id}</td>
-                            <td>{categoria.nome}</td>
-                            <td>
-                                <Link className="btn btn-primary"
-                                    to={`/categorias/${categoria.id}`}>Editar</Link>
-
-                                <button className="btn btn-danger"
-                                    onClick={() => onRemove(categoria.id)}>
-                                    Remover
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <TableContainer>
+                <Table>
+                    <TableCaption>Lista de Categorias</TableCaption>
+                    <Thead>
+                        <Tr>
+                            <Th>Código</Th>
+                            <Th>Nome</Th>
+                            <Th>Ações</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {data.map((categoria) => (
+                            <Tr key={categoria.id}
+                                _hover={{ cursor: "pointer", background: "#eee" }}>
+                                <Td>{categoria.id}</Td>
+                                <Td>{categoria.nome}</Td>
+                                <Td>
+                                    <Menu>
+                                        <MenuButton
+                                            as={IconButton}
+                                            aria-label="Actions"
+                                            icon={<BsThreeDotsVertical size={20} />}
+                                            variant="ghost"
+                                            width="10"
+                                        />
+                                        <MenuList>
+                                            <MenuItem
+                                                icon={<BsPencilSquare />}
+                                                onClick={() => onEdit(`/categorias/${categoria.id}`)}
+                                            >
+                                                Editar
+                                            </MenuItem>
+                                            <MenuItem
+                                                icon={<BsTrash />}
+                                                onClick={() => onRemove(categoria.id)}
+                                            >
+                                                Remover
+                                            </MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                                </Td>
+                            </Tr>
+                        ))}
+                    </Tbody>
+                    <Tfoot>
+                        <Tr>
+                            <Th>Código</Th>
+                            <Th>Nome</Th>
+                            <Th>Ações</Th>
+                        </Tr>
+                    </Tfoot>
+                </Table>
+            </TableContainer>
             {apiError && (<div className="alert alert-danger">{apiError}</div>)}
         </div>
     );
-}
+};
 
 export default CategoriaListPage;

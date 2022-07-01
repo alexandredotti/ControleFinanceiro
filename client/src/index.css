@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.dash{
+  max-width: 18rem;
+  display: 'inline-block';
+}
+
